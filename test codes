@@ -1,0 +1,191 @@
+/***
+Read csv file or make array in php
+***/
+
+if(isset($_FILES['users']['name']) && $_FILES['users']['name'] != ''){
+			if (($handle = fopen($_FILES['users']['tmp_name'], "r")) !== FALSE) {
+				$csvdata=array();
+				$header= fgetcsv($handle, 1000, ",");
+				while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+				if($data && !empty($data)){
+					  foreach ( $header as $i => $key ) {
+                    $csvdata[$key] = $data[$i];
+					}
+					 $insert[]=$csvdata;	
+					 }  
+				}
+			fclose($handle);
+			}
+		}
+/*** 
+create csv file using php
+***/
+    
+			$filename = "map_users_data_" . date('Y-m-d') . ".csv";;
+			$Tasks = db query or data ;
+			$delimiter=",";
+			$columns = array('Name ', 'latitude', 'longitude', 'profile_url');
+			$file = fopen('php://output', 'w');
+			fputcsv($file, $columns,$delimiter);
+			foreach ($Tasks as $task => $key) {
+				$row['name'] =	$key['name'];
+				$row['latitude'] =	$key['latitude'];
+				$row['longitude'] =	$key['longitude'];
+				$row['profile_url'] =	$key['content'];
+			fputcsv($file, array($row['name'], $row['latitude'], $row['longitude'], $row['profile_url']),$delimiter);
+			}
+			header('Content-Type: text/csv'); 
+			header('Content-Disposition: attachment; filename="' . $filename . '";');
+			fclose($file);
+// end of csv file create code 
+
+
+/*** 
+wp get categories with drop down
+***/
+
+
+/** wp get categories with drop down ***/
+
+$taxonomy = 'anatomy';
+$parents  = get_terms( $taxonomy, array( 'parent' => 0, "hide_empty" => 0 ) ); // Get all top level terms of a taxonomy
+
+if ( $parents ) :
+    ?>
+    <select name="anatomy" id="Anatomy">    
+        <option value="">Anatomy</option>
+        <?php foreach ( $parents as $term ) { ?>
+        <option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+         <?php } ?>
+    </select>
+    <?php $firstParent = $parents[0]; ?>
+    <?php $states = get_term_children( $firstParent->term_id, $taxonomy ); ?>
+    <select name="state" id="state" disabled="disabled">
+        <option value="">Choose a state</option>
+        <?php foreach ( $states as $child ) { 
+            $term = get_term_by( 'id', $child, $taxonomy ); ?>
+            <option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+        <?php } ?>
+    </select>
+    <?php $firstState = $states[0]; ?>
+    <?php $diags = get_term_children( $firstState ->term_id, $taxonomy ); ?>
+    <select name="diagnosis" id="diagnosis" disabled="disabled">
+        <option value="">Diagnosis</option>
+        <?php foreach ( $diags as $child ) { 
+            $term = get_term_by( 'id', $child, $taxonomy ); ?>
+            <option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+        <?php } ?>
+    </select>
+<?php endif;
+/*** end of categories **/
+
+/** 
+Wp Auto login user
+ **/ 
+ 
+ /* Auto login user */
+			$password = $_POST['input_5'];
+			$user_name = $_POST['input_3'];
+			 if('post' ==  strtolower($_SERVER['REQUEST_METHOD'])){
+			 $pwd1 = $wpdb->escape(trim($password));
+			 $username = $wpdb->escape(trim($user_name));  
+			 $creds = array();
+			 $creds['user_login'] = $username;
+			 $creds['user_password'] = $pwd1;
+			 $creds['remember'] = false;
+			 $user = wp_signon( $creds, true );
+			 wp_set_auth_cookie($user_id);
+			 if ( ! is_wp_error($user) ){
+				wp_redirect( admin_url('profile.php') );
+				exit;
+			 }else{
+				 wp_redirect( home_url('user-profile') );
+				exit;
+			 }
+			} 		
+/* end auto login code */
+
+
+/***
+Get add ress using google api with lat or long 
+***/
+
+ $lat = "22.719569";
+$lng = "75.857726";
+$data = file_get_contents("https://maps.google.com/maps/api/geocode/json?latlng=$lat,$lng&sensor=false&&key=");
+
+$data = json_decode($data);
+
+$add_array  = $data->results;
+$add_array = $add_array[0];
+$add_array = $add_array->address_components;
+
+/* echo '<pre>';
+print_r($add_array);
+die; */
+$country = "Not found";
+$state = "Not found"; 
+$city = "Not found";
+$postal_code = "Not found";
+foreach ($add_array as $key) {
+  if($key->types[0] == 'administrative_area_level_2')
+  {
+    $city = $key->long_name;
+  }
+  if($key->types[0] == 'administrative_area_level_1')
+  {
+    $state = $key->long_name;
+  }
+  if($key->types[0] == 'country')
+  {
+    $country = $key->long_name;
+  }
+  
+  if($key->types[0] == 'postal_code')
+  {
+    $postal_code = $key->long_name;
+  }
+  
+}
+echo "Country : ".$country."<br> State : ".$state."<br> City : ".$city ."<br> postal_code : ".$postal_code ;
+
+/***
+
+***/
+
+
+/*
+****STEPS FOR SHOPIFY THEME APP EXTENTION **********	
+*/
+
+ 1. Install Shopify Cli on local.
+ 2. Run shopify extension create
+ 3. Select extension type "Theme App Extension" for selected APP.
+ 4. Run shopify extension register to regiter extension for selected APP.
+ 5. It will create theme code folder and files.
+ 6. Add you block or embed block liquid file.
+ 7. To include the script for all the pages of online store, you need to set the target type "head" in schema settings of block.
+ 8. Then run "shopify extension push" to save the changes.
+ /*
+ ***End STEPS FOR SHOPIFY THEME APP EXTENTION **********
+ /**** image preview and genrate base64 url ***/
+ function readURL(input) {
+	
+if (input.files && input.files[0]) {
+var reader = new FileReader();
+
+reader.onload = function(e) {
+	
+	console.log(e.target.result);
+jQuery('.uploaded-img').attr('src', e.target.result);
+}
+
+reader.readAsDataURL(input.files[0]); // convert to base64 string
+}
+
+}
+ 
+ 
+
+
+

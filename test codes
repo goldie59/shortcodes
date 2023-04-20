@@ -192,6 +192,28 @@ reader.readAsDataURL(input.files[0]); // convert to base64 string
 
 }
  
+/*** custom logs ***/
+
+
+
+if ( ! function_exists( 'webhook_log' ) ) {
+  function webhook_log( $entry, $mode = 'a', $file = 'webhook' ) { 
+    // Get WordPress uploads directory.
+    $upload_dir = wp_upload_dir();
+    $upload_dir = $upload_dir['basedir'];
+    // If the entry is array, json_encode.
+    if ( is_array( $entry ) ) { 
+      $entry = json_encode( $entry ); 
+    } 
+    // Write the log file.
+    $file  = '/data/web/e23040/html/apps/wordpress-108879/wp-content/themes/Divi/webhook/webhook.log';
+    $files  = fopen( $file, $mode );
+    $bytes = fwrite( $files, current_time( 'mysql' ) . "::" . $entry . "\n" ); 
+    fclose($files); 
+    return $bytes;
+  }
+}
+ 
  
 
 

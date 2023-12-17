@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX in WordPress without jQuery with FormData</title>
+</head>
+<body>
+
+    <form id="myForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+
+        <button type="button" id="ajaxButton">Make AJAX Request</button>
+    </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Attach a click event handler to the button
+            document.getElementById('ajaxButton').addEventListener('click', function() {
+                // Create a new FormData object
+                var formData = new FormData(document.getElementById('myForm'));
+
+                // Create a new XMLHttpRequest object
+                var xhr = new XMLHttpRequest();
+
+                // Specify the request type and URL
+                xhr.open('POST', ajax_object.ajax_url, true);
+
+                // Define the callback function for when the request completes
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        // Parse the JSON response
+                        var jsonResponse = JSON.parse(xhr.responseText);
+
+                        // Handle the JSON response from the server
+                        console.log(jsonResponse.message);
+                    } else {
+                        // Handle errors
+                        console.error('AJAX request failed with status ' + xhr.status);
+                    }
+                };
+
+                // Send the request with form data
+                xhr.send(formData);
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+
+      function file
+function my_custom_ajax_handler() {
+    // Access form data using $_POST
+    $name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+    $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+
+    // Your server-side logic here
+    // Example: Construct a JSON response
+    $response = array(
+        'status' => 'success',
+        'message' => 'Hello, ' . $name . '!',
+    );
+
+    // Return the JSON response
+    wp_send_json($response);
+}
+
+add_action('wp_ajax_my_custom_ajax_action', 'my_custom_ajax_handler');
+add_action('wp_ajax_nopriv_my_custom_ajax_action', 'my_custom_ajax_handler');
+
+

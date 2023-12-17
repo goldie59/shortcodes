@@ -114,7 +114,7 @@ Wp Auto login user
 
 
 /***
-Get add ress using google api with lat or long 
+Get Address using google api with lat or long 
 ***/
 
  $lat = "22.719569";
